@@ -1,3 +1,5 @@
+package com.kokozzzzzzz.calculator.calculator;
+
 public class Calculator {
     private static final String OPERATOR_PLUS = "+";
     private static final String OPERATOR_MINUS = "-";

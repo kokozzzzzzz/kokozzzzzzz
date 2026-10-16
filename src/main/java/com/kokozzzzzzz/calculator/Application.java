@@ -1,3 +1,7 @@
+package com.kokozzzzzzz.calculator;
+
+import com.kokozzzzzzz.calculator.calculator.Calculator;
+
 import java.util.Scanner;
 
 public class Application {
