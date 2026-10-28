@@ -1,28 +1,32 @@
 package com.kokozzzzzzz.calculator.calculator;
 
+import com.kokozzzzzzz.calculator.operations.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Calculator {
     private static final String OPERATOR_PLUS = "+";
     private static final String OPERATOR_MINUS = "-";
     private static final String OPERATOR_MULTIPLY = "*";
     private static final String OPERATOR_DIVIDE = "/";
+    private static final String OPERATOR_MODULO = "%";
     private static final String ERROR_UNKNOWN_OPERATOR = "неизвестный оператор";
-    private static final String ERROR_DIVIDE_0 = "деление на ноль";
+     private static final Map<String, Operations> Operation = new HashMap<>();
+
+    static {
+        Operation.put(OPERATOR_PLUS, new AddOperation());
+        Operation.put(OPERATOR_MINUS, new SubtractOperation());
+        Operation.put(OPERATOR_MULTIPLY, new MultiplyOperation());
+        Operation.put(OPERATOR_DIVIDE, new DivideOperation());
+        Operation.put(OPERATOR_MODULO, new ModuloOperation());
+    }
 
     public static double calculate(double firstNumber, double secondNumber, String operator) {
-        switch (operator) {
-            case OPERATOR_PLUS:
-                return firstNumber + secondNumber;
-            case OPERATOR_MINUS:
-                return firstNumber - secondNumber;
-            case OPERATOR_DIVIDE:
-                if (secondNumber == 0) {
-                    throw new ArithmeticException(ERROR_DIVIDE_0);
-                }
-                return firstNumber / secondNumber;
-            case OPERATOR_MULTIPLY:
-                return firstNumber * secondNumber;
-            default:
-                throw new IllegalArgumentException(ERROR_UNKNOWN_OPERATOR);
+        Operations OPERATION = Operation.get(operator);
+        if (OPERATION == null) {
+            throw new IllegalArgumentException(ERROR_UNKNOWN_OPERATOR);
         }
+        return OPERATION.execute(firstNumber, secondNumber);
     }
 }

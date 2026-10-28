@@ -1,13 +1,13 @@
 package com.kokozzzzzzz.calculator;
 
 import com.kokozzzzzzz.calculator.calculator.Calculator;
+import com.kokozzzzzzz.calculator.operations.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CalculatorTest {
-
 
     @Test
     void plusReturnsCorrectResult() {
@@ -42,7 +42,7 @@ class CalculatorTest {
     }
 
     @Test
-    void dividebyZeroThrowsException() {
+    void divideByZeroThrowsException() {
         double firstNumber = 4;
         double secondNumber = 0;
         assertThrows(ArithmeticException.class, () -> Calculator.calculate(firstNumber, secondNumber, "/"));
@@ -64,7 +64,7 @@ class CalculatorTest {
     }
 
     @Test
-    void negativeResultReturnsCorrectResult() {
+    void subtractResultReturnsCorrectResult() {
         double firstNumber = -5;
         double secondNumber = 3;
         double result = Calculator.calculate(firstNumber, secondNumber, "-");
@@ -78,4 +78,47 @@ class CalculatorTest {
         double result = Calculator.calculate(firstNumber, secondNumber, "/");
         assertEquals(0.0, result, 0.001);
     }
+
+    @Test
+    void addOperationWorks() {
+        Operations operation = new AddOperation();
+        assertEquals(8.0, operation.execute(5, 3), 0.001);
+    }
+
+    @Test
+    void subtractOperationWorks() {
+        Operations operation = new SubtractOperation();
+        assertEquals(3.0, operation.execute(5, 2), 0.001);
+    }
+
+    @Test
+    void multiplyOperationWorks() {
+        Operations operation = new MultiplyOperation();
+        assertEquals(15.0, operation.execute(5, 3), 0.001);
+    }
+
+    @Test
+    void divideOperationWorks() {
+        Operations operation = new DivideOperation();
+        assertEquals(6, operation.execute(12, 2), 0.001);
+    }
+
+    @Test
+    void divideByZeroByOperatorThrowsException() {
+        Operations operation = new DivideOperation();
+        assertThrows(ArithmeticException.class, () -> operation.execute(5, 0));
+    }
+
+    @Test
+    void moduloOperationWorks() {
+        Operations operation = new ModuloOperation();
+        assertEquals(1, operation.execute(5, 2), 0.001);
+    }
+
+    @Test
+    void moduloByZeroThrowsException() {
+        Operations operation = new ModuloOperation();
+        assertThrows(ArithmeticException.class, () -> operation.execute(5, 0));
+    }
+
 }
