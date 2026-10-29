@@ -1,7 +1,6 @@
 package com.kokozzzzzzz.calculator;
 
 import com.kokozzzzzzz.calculator.calculator.Calculator;
-import com.kokozzzzzzz.calculator.operations.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,114 +10,56 @@ class CalculatorTest {
 
     @Test
     void plusReturnsCorrectResult() {
-        double firstNumber = 5;
-        double secondNumber = 3;
-        double result = Calculator.calculate(firstNumber, secondNumber, "+");
-        assertEquals(8.0, result, 0.001);
+        assertEquals(8.0, Calculator.calculate(5, 3, "+"), 0.001);
     }
 
     @Test
     void minusReturnsCorrectResult() {
-        double firstNumber = 10;
-        double secondNumber = 3;
-        double result = Calculator.calculate(firstNumber, secondNumber, "-");
-        assertEquals(7.0, result, 0.001);
+        assertEquals(7.0, Calculator.calculate(10, 3, "-"), 0.001);
+    }
+
+    @Test
+    void minusReturnsNegativeResult() {
+        assertEquals(-8.0, Calculator.calculate(-5, 3, "-"), 0.001);
     }
 
     @Test
     void multiplyReturnsCorrectResult() {
-        double firstNumber = 4;
-        double secondNumber = 3;
-        double result = Calculator.calculate(firstNumber, secondNumber, "*");
-        assertEquals(12.0, result, 0.001);
+        assertEquals(12.0, Calculator.calculate(4, 3, "*"), 0.001);
     }
 
     @Test
     void divideReturnsCorrectResult() {
-        double firstNumber = 9;
-        double secondNumber = 3;
-        double result = Calculator.calculate(firstNumber, secondNumber, "/");
-        assertEquals(3, result, 0.001);
+        assertEquals(3.0, Calculator.calculate(9, 3, "/"), 0.001);
     }
 
     @Test
-    void divideByZeroThrowsException() {
-        double firstNumber = 4;
-        double secondNumber = 0;
-        assertThrows(ArithmeticException.class, () -> Calculator.calculate(firstNumber, secondNumber, "/"));
+    void divideReturnsFractionalResult() {
+        assertEquals(2.5, Calculator.calculate(10, 4, "/"), 0.001);
     }
 
     @Test
-    void unknownOperatorThrowsException() {
-        double firstNumber = 9;
-        double secondNumber = 2;
-        assertThrows(IllegalArgumentException.class, () -> Calculator.calculate(firstNumber, secondNumber, "^"));
+    void divideZeroByNumberReturnsZero() {
+        assertEquals(0.0, Calculator.calculate(0, 5, "/"), 0.001);
     }
 
     @Test
-    void fracitonalResultRetrunCorrectResult() {
-        double firstNumber = 10;
-        double secondNumber = 4;
-        double result = Calculator.calculate(firstNumber, secondNumber, "/");
-        assertEquals(2.5, result, 0.001);
+    void divideByZeroThrowsArithmeticException() {
+        assertThrows(ArithmeticException.class, () -> Calculator.calculate(4, 0, "/"));
     }
 
     @Test
-    void subtractResultReturnsCorrectResult() {
-        double firstNumber = -5;
-        double secondNumber = 3;
-        double result = Calculator.calculate(firstNumber, secondNumber, "-");
-        assertEquals(-8.0, result, 0.001);
+    void moduloReturnsCorrectResult() {
+        assertEquals(1.0, Calculator.calculate(10, 3, "%"), 0.001);
     }
 
     @Test
-    void zeroResultReturnsCorrectResult() {
-        double firstNumber = 0;
-        double secondNumber = 5;
-        double result = Calculator.calculate(firstNumber, secondNumber, "/");
-        assertEquals(0.0, result, 0.001);
+    void moduloByZeroThrowsArithmeticException() {
+        assertThrows(ArithmeticException.class, () -> Calculator.calculate(10, 0, "%"));
     }
 
     @Test
-    void addOperationWorks() {
-        Operations operation = new AddOperation();
-        assertEquals(8.0, operation.execute(5, 3), 0.001);
+    void unknownOperatorThrowsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> Calculator.calculate(9, 2, "^"));
     }
-
-    @Test
-    void subtractOperationWorks() {
-        Operations operation = new SubtractOperation();
-        assertEquals(3.0, operation.execute(5, 2), 0.001);
-    }
-
-    @Test
-    void multiplyOperationWorks() {
-        Operations operation = new MultiplyOperation();
-        assertEquals(15.0, operation.execute(5, 3), 0.001);
-    }
-
-    @Test
-    void divideOperationWorks() {
-        Operations operation = new DivideOperation();
-        assertEquals(6, operation.execute(12, 2), 0.001);
-    }
-
-    @Test
-    void divideByZeroByOperatorThrowsException() {
-        Operations operation = new DivideOperation();
-        assertThrows(ArithmeticException.class, () -> operation.execute(5, 0));
-    }
-
-    @Test
-    void moduloOperationWorks() {
-        Operations operation = new ModuloOperation();
-        assertEquals(1, operation.execute(5, 2), 0.001);
-    }
-
-    @Test
-    void moduloByZeroThrowsException() {
-        Operations operation = new ModuloOperation();
-        assertThrows(ArithmeticException.class, () -> operation.execute(5, 0));
-    }
-
 }

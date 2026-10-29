@@ -1,6 +1,7 @@
 package com.kokozzzzzzz.calculator;
 
 import com.kokozzzzzzz.calculator.calculator.Calculator;
+import com.kokozzzzzzz.calculator.history.HistoryEntry;
 import com.kokozzzzzzz.calculator.history.HistoryManager;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class Application {
             "-  вычитание\n" +
             "*  умножение\n" +
             "/  деление\n" +
-            "% остаток от деления\n" +
+            "%  остаток от деления\n" +
             "\n" +
             "Дополнительные команды:\n" +
             "history  — показать историю\n" +
@@ -43,36 +44,36 @@ public class Application {
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        HistoryManager history = new HistoryManager();
+        HistoryManager historyManager = new HistoryManager();
         while (true) {
             System.out.print(PROMPT);
-            String example = scanner.nextLine().trim();
-            if (example.equals(EXIT_COMMAND)) {
+            String input = scanner.nextLine().trim();
+            if (input.equals(EXIT_COMMAND)) {
                 break;
             }
-            if (example.equals(CLEAR)) {
-                history.clear();
+            if (input.equals(CLEAR)) {
+                historyManager.clear();
                 System.out.println(HISTORY_IS_CLEANSED);
                 continue;
             }
-            if (example.equals(HELP)) {
+            if (input.equals(HELP)) {
                 System.out.println(AVAILABLE_COMMANDS);
                 continue;
             }
-            if (example.equals(HISTORY)) {
-                Complete_The_History(history);
+            if (input.equals(HISTORY)) {
+                printHistory(historyManager);
                 continue;
             }
-            if (example.equals(LAST_ENTRY)) {
-                Complete_The_Last_Entry(history);
+            if (input.equals(LAST_ENTRY)) {
+                repeatLast(historyManager);
                 continue;
             }
-            Calculation(example, history);
+            calculate(input, historyManager);
         }
     }
 
-    private static void Calculation(String example, HistoryManager history) {
-        String[] parts = example.split(DIVIDE_ON_THE_PARTS);
+    private static void calculate(String input, HistoryManager historyManager) {
+        String[] parts = input.split(DIVIDE_ON_THE_PARTS);
         if (parts.length != MAX_LENGTH) {
             System.out.println(FORMAT);
             return;
@@ -82,7 +83,7 @@ public class Application {
             double secondNumber = Double.parseDouble(parts[RIGHT_PART]);
             String operator = parts[OPERATOR_PART];
             double result = Calculator.calculate(firstNumber, secondNumber, operator);
-            history.addElement(firstNumber + " " + operator + " " + secondNumber + HistoryManager.SEPARATOR + result);
+            historyManager.addElement(new HistoryEntry(firstNumber, operator, secondNumber, result));
             System.out.println(CALCULATION_RESULT + result);
         } catch (NumberFormatException e) {
             System.out.println(FORMAT);
@@ -91,24 +92,24 @@ public class Application {
         }
     }
 
-    private static void Complete_The_Last_Entry(HistoryManager history) {
+    private static void repeatLast(HistoryManager historyManager) {
         try {
-            String entry = history.getLastElement();
-            history.addElement(entry);
-            System.out.println(CALCULATION_RESULT + history.getLastResult());
-        } catch (IllegalStateException e) {
+            HistoryEntry entry = historyManager.getLastElement();
+            double result = Calculator.calculate(entry.firstNumber(), entry.secondNumber(), entry.operator());
+            System.out.println(CALCULATION_RESULT + result);
+        } catch (IllegalStateException | ArithmeticException | IllegalArgumentException e) {
             System.out.println(ERROR + e.getMessage());
         }
     }
 
-    private static void Complete_The_History(HistoryManager history) {
-        if (history.isEmpty()) {
+    private static void printHistory(HistoryManager historyManager) {
+        if (historyManager.isEmpty()) {
             System.out.println(EMPTY_HISTORY);
-        } else {
-            ArrayList<String> historyList = history.getHistory();
-            for (int i = 0, size = historyList.size(); i < size; i++) {
-                System.out.println((i + 1) + DIVIDER + historyList.get(i));
-            }
+            return;
+        }
+        ArrayList<HistoryEntry> entries = historyManager.getHistory();
+        for (int i = 0; i < entries.size(); i++) {
+            System.out.println((i + 1) + DIVIDER + entries.get(i));
         }
     }
 }
